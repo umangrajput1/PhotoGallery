@@ -237,6 +237,18 @@ const App: React.FC = () => {
     setSelectedFolderId(folderId);
   };
 
+  const foldersWithCounts = useMemo(() => {
+    const counts = images.reduce((acc, image) => {
+      acc[image.folderId] = (acc[image.folderId] || 0) + 1;
+      return acc;
+    }, {} as Record<number, number>);
+
+    return folders.map(folder => ({
+      ...folder,
+      imageCount: counts[folder.id] || 0,
+    }));
+  }, [folders, images]); 
+
   const filteredImages = useMemo(() => {
     if (selectedFolderId === 0) {
       // "All Images"
@@ -269,7 +281,8 @@ const App: React.FC = () => {
           <div className="row h-100">
               <aside className="col-lg-3 h-100">
             <FolderList
-              folders={folders}
+              folders={foldersWithCounts}
+              totalImageCount={images.length}
               selectedFolderId={selectedFolderId}
               onSelectFolder={handleSelectFolder}
             />

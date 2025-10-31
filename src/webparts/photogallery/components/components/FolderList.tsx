@@ -2,12 +2,13 @@ import * as React from 'react';
 import {Folder } from './../types';
 
 interface FolderListProps {
-    folders: Folder[];
+    folders: (Folder & { imageCount: number })[];
+    totalImageCount: number;
     selectedFolderId: number;
     onSelectFolder: (folderId: number) => void;
 }
 
-const FolderList: React.FC<FolderListProps> = ({ folders, selectedFolderId, onSelectFolder }) => {
+const FolderList: React.FC<FolderListProps> = ({ folders, totalImageCount, selectedFolderId, onSelectFolder }) => {
     return (
         <div className="card h-100 d-flex flex-column">
             <div className="card-header flex-shrink-0">
@@ -22,6 +23,7 @@ const FolderList: React.FC<FolderListProps> = ({ folders, selectedFolderId, onSe
                     <div className="fw-bold">
                         <i className="bi bi-images me-2"></i>All Images
                     </div>
+                    <span className="badge bg-success rounded-pill">{totalImageCount}</span>
                 </button>
                 {folders.map(folder => (
                     <button
@@ -33,8 +35,7 @@ const FolderList: React.FC<FolderListProps> = ({ folders, selectedFolderId, onSe
                         <span>
                             <i className="bi bi-folder me-2"></i>{folder.name}
                         </span>
-                        {/* You could add a badge with image count here later */}
-                        {/* <span className="badge bg-secondary rounded-pill">14</span> */}
+                        <span className="badge bg-success rounded-pill">{folder.imageCount}</span>
                     </button>
                 ))}
             </div>

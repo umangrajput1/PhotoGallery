@@ -1,6 +1,5 @@
 import * as React from "react";
 import { useCallback, useState, useEffect } from "react";
-import { GoogleGenAI } from "@google/genai";
 import { Image } from "./../types";
 
 interface ImageUploaderProps {
@@ -13,8 +12,7 @@ type UploadMethod =
   | "upload"
   | "url"
   | "paste"
-  | "gallery"
-  | "generate";
+  | "gallery";
 
 const ImageUploader: React.FC<ImageUploaderProps> = ({
   onImageUpload,
@@ -25,13 +23,11 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   const [imageUrl, setImageUrl] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [prompt, setPrompt] = useState("");
 
   const resetState = useCallback(() => {
     setError(null);
     setIsLoading(false);
     setImageUrl("");
-    setPrompt("");
     setIsDragging(false);
   }, []);
 
@@ -151,49 +147,6 @@ useEffect(() => {
   }
 }, [uploadMethod, onImageUpload]);
 
-  // --- AI Generation Logic ---
-  const handleGenerateSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!prompt) {
-      setError("Please enter a prompt to generate an image.");
-      return;
-    }
-    setError(null);
-    setIsLoading(true);
-
-    try {
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-      const response = await ai.models.generateImages({
-        model: "imagen-4.0-generate-001",
-        prompt: prompt,
-        config: {
-          numberOfImages: 1,
-          outputMimeType: "image/png",
-        },
-      });
-
-      const base64ImageBytes = response.generatedImages?.[0]?.image?.imageBytes;
-
-      if (!base64ImageBytes) {
-        console.error("No image was generated or the response is undefined");
-      }
-
-      const res = await fetch(`data:image/png;base64,${base64ImageBytes}`);
-      const blob = await res.blob();
-      const file = new File([blob], "ai-generated-image.png", {
-        type: "image/png",
-      });
-
-      onImageUpload(file);
-    } catch (err) {
-      console.error("AI image generation failed:", err);
-      const errorMessage =
-        err instanceof Error ? err.message : "An unknown error occurred.";
-      setError(`Failed to generate image. ${errorMessage}`);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   // --- Gallery Tab Logic ---
   const handleSelectFromGallery = async (image: Image) => {
@@ -267,30 +220,6 @@ useEffect(() => {
           description="Use existing image"
           onClick={() => handleMethodSelect("gallery")}
         />
-      </div>
-
-      <div className="position-relative my-4">
-        <hr />
-        <span className="position-absolute top-50 start-50 translate-middle bg-white px-3 text-muted">
-          OR
-        </span>
-      </div>
-
-      <div
-        className="card text-center shadow-sm"
-        onClick={() => handleMethodSelect("generate")}
-        style={{ cursor: "pointer" }}
-      >
-        <div className="card-body p-4">
-          <i
-            className="bi bi-stars text-primary"
-            style={{ fontSize: "2.5rem" }}
-          ></i>
-          <h6 className="card-title mt-3 mb-1">Generate with AI</h6>
-          <p className="card-text small text-muted">
-            Create a new image from a text prompt.
-          </p>
-        </div>
       </div>
     </div>
   );
@@ -461,53 +390,6 @@ useEffect(() => {
                 )}
               </div>
             )}
-          </div>
-        </div>
-      )}
-
-      {uploadMethod === "generate" && (
-        <div>
-          <BackButton />
-          <div className="d-flex flex-column justify-content-center align-items-center h-100">
-            <h4 className="mb-3">Generate an Image with AI</h4>
-            <form
-              onSubmit={handleGenerateSubmit}
-              className="w-100"
-              style={{ maxWidth: "600px" }}
-            >
-              <div className="mb-3">
-                <textarea
-                  className="form-control"
-                  rows={3}
-                  placeholder="e.g., A majestic lion wearing a crown on a throne..."
-                  value={prompt}
-                  onChange={(e) => setPrompt(e.target.value)}
-                  disabled={isLoading}
-                  required
-                  aria-label="Image generation prompt"
-                />
-              </div>
-              <button
-                className="btn btn-primary w-100 btn-lg"
-                type="submit"
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <>
-                    <span
-                      className="spinner-border spinner-border-sm me-2"
-                      role="status"
-                      aria-hidden="true"
-                    ></span>
-                    Generating...
-                  </>
-                ) : (
-                  <>
-                    <i className="bi bi-stars me-2"></i>Generate Image
-                  </>
-                )}
-              </button>
-            </form>
           </div>
         </div>
       )}
