@@ -14,6 +14,7 @@ const App: React.FC = () => {
   const [editingImage, setEditingImage] = useState<any | null>(null);
   const [selectedFolderId, setSelectedFolderId] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
+
   const web = new Web(
     "https://grueneweltweit.sharepoint.com/sites/GrueneWeltweit/Washington/webstudio"
   );
@@ -89,7 +90,7 @@ const App: React.FC = () => {
               folderId: getFolderId(fileUrl),
               src: cacheBustedUrl,
               name: item.FileLeafRef,
-              title: item.Title || item.FileLeafRef,
+              title: item.Title || "",
               description: item.Description || "",
               copyright: item.CopyrightInfo || "",
               UniqueId: item.UniqueId,
@@ -286,6 +287,7 @@ const App: React.FC = () => {
     </div>
       {isModalOpen && (
         <ImageEditorModal
+          imagesLength = {images.length}
           isOpen={isModalOpen}
           onClose={handleCloseModal}
           onSave={handleSaveImage}

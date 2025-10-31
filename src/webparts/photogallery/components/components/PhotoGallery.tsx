@@ -90,7 +90,7 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({
                   style={{ height: "250px", objectFit: "cover" }}
                 />
                 <div className="card-body">
-                  <h5 className="card-title">{image.title || "Untitled"}</h5>
+                  <h5 className="card-title">{(image.title) ? image.title : image.name }</h5>
                   <p className="card-text text-muted small">
                     {image.description || ""}
                   </p>

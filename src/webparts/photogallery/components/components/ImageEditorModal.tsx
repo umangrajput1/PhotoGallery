@@ -12,6 +12,7 @@ interface ImageEditorModalProps {
     imageToEdit: Image | null;
     folders: Folder[];
     images: Image[];
+    imagesLength: number;
 }
 
 const BLANK_IMAGE_STATE: Omit<Image, 'id' | 'folderId'> & { folderId: number | '' } = {
@@ -23,7 +24,7 @@ const BLANK_IMAGE_STATE: Omit<Image, 'id' | 'folderId'> & { folderId: number | '
     folderId: '',
 };
 
-const ImageEditorModal: React.FC<ImageEditorModalProps> = ({ isOpen, onClose, onSave, imageToEdit, folders, images }) => {
+const ImageEditorModal: React.FC<ImageEditorModalProps> = ({ imagesLength, isOpen, onClose, onSave, imageToEdit, folders, images }) => {
     const [editedImage, setEditedImage] = useState<Omit<Image, 'id' | 'src' | 'folderId'> & { id?: number, src: string | null, folderId: number | '' }>(BLANK_IMAGE_STATE);
     
     const imgRef = useRef<HTMLImageElement>(null);
@@ -35,6 +36,7 @@ const ImageEditorModal: React.FC<ImageEditorModalProps> = ({ isOpen, onClose, on
     const [dimensions, setDimensions] = useState<Dimensions>({ width: 0, height: 0 });
     const [isPreviewHovered, setIsPreviewHovered] = useState(false);
     const [previewDataUrl, setPreviewDataUrl] = useState<string | null>(null);
+    console.log("imagess length", imagesLength)
 
 
     const resetEditorState = useCallback(() => {
@@ -179,8 +181,8 @@ const ImageEditorModal: React.FC<ImageEditorModalProps> = ({ isOpen, onClose, on
             ...imageWithoutId,
             src: finalImageSrc || editedImage.src,
             folderId: editedImage.folderId as number,
-            title: `${editedImage.title || 'Untitled'} (Copy)`, // Add (Copy) to title
-            name: `copy_of_${editedImage.name}`, // Add prefix to name
+            title: editedImage.title ? `${editedImage.title}_Copy${imagesLength+1}` : "", // Add (Copy) to title
+            name: editedImage.name, // Add prefix to name
         };
         onSave(finalImage);
     };
