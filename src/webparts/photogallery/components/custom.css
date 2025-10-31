@@ -1,0 +1,18 @@
+/********** addNewImageModal CSS  *****/
+.addNewImageModal .modal-dialog.modal-fullscreen {
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.addNewImageModal .modal-dialog.modal-fullscreen .modal-content > .modal-header, .addNewImageModal .modal-dialog.modal-fullscreen .modal-content > .modal-body, .addNewImageModal .modal-dialog.modal-fullscreen .modal-content > .modal-header, .addNewImageModal .modal-dialog.modal-fullscreen .modal-content > .modal-footer {
+    padding: 15px;
+}
+.custom-modal-width {
+  max-width: 90%; /* or 1000px, or whatever you need */
+  width: 100%;    /* ensures it fills available space */
+}
+.addimg.modal-body {
+    min-height: 550px;
+    max-height: 650px;
+    overflow-y: scroll;
+}

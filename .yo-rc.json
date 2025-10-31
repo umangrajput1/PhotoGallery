@@ -1,0 +1,18 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "plusBeta": false,
+    "isCreatingSolution": true,
+    "nodeVersion": "18.18.0",
+    "sdksVersions": {},
+    "version": "1.21.1",
+    "libraryName": "photogallery",
+    "libraryId": "6ceac9fb-b1a8-4287-9ff0-9575e17c88a7",
+    "environment": "spo",
+    "packageManager": "npm",
+    "solutionName": "photogallery",
+    "solutionShortDescription": "photogallery description",
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "componentType": "webpart"
+  }
+}
